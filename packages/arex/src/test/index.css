@@ -1,0 +1,11 @@
+.json-deleted-node {
+    background-color: #9c081e; /* 删除节点的背景色 */
+  }
+  
+  .json-added-node {
+    background-color: #24aa2f; /* 新增节点的背景色 */
+  }
+  
+  .json-modified-node {
+    background-color: #5b1227; /* 修改节点的背景色 */
+  }

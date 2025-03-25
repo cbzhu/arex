@@ -16,12 +16,36 @@ if (!SERVICE_API_URL || !SERVICE_SCHEDULE_URL || !SERVICE_STORAGE_URL) {
   throw new Error('SERVICE_API_URL, SERVICE_SCHEDULE_URL, SERVICE_STORAGE_URL are required');
 }
 
+const logProxyRequest = (req, res) => {
+  console.log(`Proxying request to: ${req.url}`);
+};
+
+app.use(
+  '/schedule/report/queryDiffMsgById/:id',
+  (req, res) => {
+    res.json({
+      data: {
+        id: req.params.id,
+        categoryName: 'Mock Category',
+        operationName: 'Mock Operation',
+        diffResultCode: 1,
+        logInfos: [],
+        exceptionMsg: null,
+        baseMsg: '{"mock": "base data"}',
+        testMsg: '{"mock": "test data"}',
+      },
+      encrypted: false,
+    });
+  },
+);
+
 app.use(
   '/webApi',
   createProxyMiddleware({
     target: SERVICE_API_URL,
     changeOrigin: true,
     pathRewrite: { '/webApi': '/api' },
+    onProxyReq: logProxyRequest,  // 在这里添加日志
   }),
 );
 
@@ -31,6 +55,7 @@ app.use(
     target: SERVICE_SCHEDULE_URL,
     changeOrigin: true,
     pathRewrite: { '/schedule': '/api' },
+    onProxyReq: logProxyRequest,  // 在这里添加日志
   }),
 );
 
@@ -115,3 +140,4 @@ app.use(express.static(__dirname + '/dist'));
 app.listen(PORT, function () {
   console.log(`Server is running on http://localhost:${PORT}/`);
 });
+
